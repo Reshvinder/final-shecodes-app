@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios"; 
-import FormattedDate from "./FormattedDate"
-import WeatherIcon from "./WeatherIcon"
+import FormattedDate from "./FormattedDate";
+import WeatherIcon from "./WeatherIcon";
+import WeatherConversion from "./WeatherConversion";
 import './Weather.css';
 
 
@@ -86,8 +87,8 @@ axios.get(apiURL).then(handleResponse);
                 <div className="col-8">
                   <h5 className="card-title">{weatherData.city}</h5>
                   <div className="card-text">
-                    <span className="temp">{weatherData.temperature}</span> {" "}
-                    <span className="units">°C | °F</span>
+                       <WeatherConversion celsius={weatherData.temperature} />
+                
                   </div>
                   <span className="card-text"> Last Updated:
                        <FormattedDate date={weatherData.date} /> 
