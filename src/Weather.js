@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; 
 import FormattedDate from "./FormattedDate"
+import WeatherIcon from "./WeatherIcon"
 import './Weather.css';
 
 
@@ -9,8 +10,9 @@ const [weatherData, setWeatherData] = useState({ ready: false });
   const [city, setCity] = useState(props.defaultCity);
 
 function handleResponse (response) {
+    
     setWeatherData({
-      ready: true,
+    ready: true,
       temperature: Math.round(response.data.main.temp),
       humidity: response.data.main.humidity,
       date: new Date(response.data.dt * 1000),
@@ -18,6 +20,8 @@ function handleResponse (response) {
       icon: response.data.weather[0].icon,
       wind: response.data.wind.speed,
       city: response.data.name,
+      minTemp: Math.round(response.data.main.temp_min),
+      maxTemp: Math.round(response.data.main.temp_max),
     });
 }
 
@@ -73,11 +77,11 @@ axios.get(apiURL).then(handleResponse);
         </div>
 
         <div className="row">
-          <div className="col -6">
+          <div className="col-8">
             <div className="card">
               <div className="row">
                 <div className="col-4">
-                  <img src={weatherData.icon} alt="weatherIcon" />
+                  <WeatherIcon code={weatherData.icon} />
                 </div>
                 <div className="col-8">
                   <h5 className="card-title">{weatherData.city}</h5>
@@ -85,15 +89,16 @@ axios.get(apiURL).then(handleResponse);
                     <span className="temp">{weatherData.temperature}</span> {" "}
                     <span className="units">°C | °F</span>
                   </div>
-                  <p className="card-text"> Last Updated: 
-                  <FormattedDate date={weatherData.date} /> </p>
-                  <p className="card-text">10°C / 18°C </p>
+                  <span className="card-text"> Last Updated:
+                       <FormattedDate date={weatherData.date} /> 
+                  </span>
+                  <p className="card-text">{weatherData.minTemp}°C / {weatherData.maxTemp}°C </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="col -6">
+          <div className="col-4">
             <div className="card">
               <h5 className="card-title">{weatherData.description}</h5>
               <p className="card-text">

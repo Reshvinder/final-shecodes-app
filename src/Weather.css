@@ -22,11 +22,15 @@ h1 {
   padding: 0px 10px;
 }
 
+.col-4 canvas {
+  margin: 40px 0px 0px 30px;
+}
+
 .card {
   height: 100%;
-  max-width: 540px;
   text-transform: capitalize;
   margin-top: 10px;
+  text-align: center;
 }
 
 h5 {
