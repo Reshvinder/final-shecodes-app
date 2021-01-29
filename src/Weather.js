@@ -3,6 +3,7 @@ import axios from "axios";
 import FormattedDate from "./FormattedDate";
 import WeatherIcon from "./WeatherIcon";
 import WeatherConversion from "./WeatherConversion";
+import WeatherForecast from "./WeatherForecast";
 import './Weather.css';
 
 
@@ -110,6 +111,7 @@ axios.get(apiURL).then(handleResponse);
             </div>
           </div>
           </div>
+          <WeatherForecast city={weatherData.city} />
 
               
           <div className= "open-source"> <a href="https://github.com/Reshvinder/final-shecodes-app" rel="noreferrer" target="_blank"> <small>Open-source code</small></a> <small> by Reshvinder Bhullar </small> </div>
