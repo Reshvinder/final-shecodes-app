@@ -1,20 +1,47 @@
+import React, { useState } from "react";
+import axios from "axios"; 
+import FormattedDate from "./FormattedDate"
 import './Weather.css';
-import React from "react";
 
-export default function Weather () {
-let weatherData = {
-    city: "New York",
-    temperature: 19,
-    date: "Tuesday 10:00",
-    description: "Sunny",
-    imgUrl: "https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png",
-    humidity: 80,
-    wind: 10,
-  };
 
+export default function Weather (props) {
+const [weatherData, setWeatherData] = useState({ ready: false });
+  const [city, setCity] = useState(props.defaultCity);
+
+function handleResponse (response) {
+    setWeatherData({
+      ready: true,
+      temperature: Math.round(response.data.main.temp),
+      humidity: response.data.main.humidity,
+      date: new Date(response.data.dt * 1000),
+      description: response.data.weather[0].description,
+      icon: response.data.weather[0].icon,
+      wind: response.data.wind.speed,
+      city: response.data.name,
+    });
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    search();
+  }
+
+ function handleCityChange(event) {
+    setCity(event.target.value);
+  }
+
+
+function search () {
+const apiKey = "fe0d4526b64ca05843436bd7ebaf7c7a";
+const units= "metric";
+let apiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
+
+axios.get(apiURL).then(handleResponse);
+}
+  
+  if (weatherData.ready) {
     return (
         <div className="Weather">
-      
         <h1>
           <i className="fas fa-rainbow"> </i> {" "}
           Weather On The Go....
@@ -22,12 +49,13 @@ let weatherData = {
 
         <div className="row">
           <div className="col-7">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-floating mb-3">
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter city here.."
+                  onChange={handleCityChange}
                 />
               </div>
             </form>
@@ -49,7 +77,7 @@ let weatherData = {
             <div className="card">
               <div className="row">
                 <div className="col-4">
-                  <img src={weatherData.imgUrl} alt="weatherIcon" />
+                  <img src={weatherData.icon} alt="weatherIcon" />
                 </div>
                 <div className="col-8">
                   <h5 className="card-title">{weatherData.city}</h5>
@@ -57,8 +85,8 @@ let weatherData = {
                     <span className="temp">{weatherData.temperature}</span> {" "}
                     <span className="units">°C | °F</span>
                   </div>
-                  <p className="card-text"> Last Updated: </p>{" "}
-                  <span className="card-text"> {weatherData.date} </span>
+                  <p className="card-text"> Last Updated: 
+                  <FormattedDate date={weatherData.date} /> </p>
                   <p className="card-text">10°C / 18°C </p>
                 </div>
               </div>
@@ -83,6 +111,14 @@ let weatherData = {
        
       
         </div>
-    
+
     );
+
+     } else {
+    search();
+    return "Loading...";
+  }
+
+
+
 }
