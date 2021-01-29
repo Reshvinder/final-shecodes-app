@@ -27,6 +27,14 @@ function handleResponse (response) {
     });
 }
 
+function search () {
+const apiKey = "fe0d4526b64ca05843436bd7ebaf7c7a";
+const units= "metric";
+let apiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
+
+axios.get(apiURL).then(handleResponse);
+}
+
 function handleSubmit(event) {
     event.preventDefault();
     search();
@@ -36,14 +44,20 @@ function handleSubmit(event) {
     setCity(event.target.value);
   }
 
+function searchLocation(position) {
+  let apiKey = "fe0d4526b64ca05843436bd7ebaf7c7a";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${
+    position.coords.latitude
+  }&lon=${position.coords.longitude}&appid=${apiKey}&units=metric`;
 
-function search () {
-const apiKey = "fe0d4526b64ca05843436bd7ebaf7c7a";
-const units= "metric";
-let apiURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
-
-axios.get(apiURL).then(handleResponse);
+  axios.get(apiUrl).then(handleResponse);
 }
+
+function getCurrentLocation (event){
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(searchLocation);
+}
+
   
   if (weatherData.ready) {
     return (
@@ -72,7 +86,7 @@ axios.get(apiURL).then(handleResponse);
           </div>
 
           <div className="col-4">
-              <button className="btn btn-info">
+              <button className="btn btn-info" onClick={getCurrentLocation}>
                 Current location
               </button>
           </div>
